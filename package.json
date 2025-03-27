@@ -1,0 +1,33 @@
+{
+  "name": "grammarly-helper",
+  "version": "1.0.0",
+  "description": "Mac app for improving text with ChatGPT",
+  "author": "Your Name",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.yourname.grammarlyhelper",
+    "productName": "GrammarlyHelper",
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.productivity",
+      "icon": "icon.icns"
+    },
+    "files": [
+      "**/*",
+      "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!**/.*",
+      "!*.map"
+    ]
+  },
+  "devDependencies": {
+    "electron": "^29.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "dependencies": {
+    "electron-fetch": "^1.9.1"
+  }
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Settings</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        label { display: block; margin-top: 12px; font-weight: bold; }
+        input, textarea { width: 100%; margin-top: 4px; padding: 6px; }
+        button { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
+    </style>
+</head>
+<body>
+<h2>App Settings</h2>
+<form id="settingsForm">
+    <label for="model">OpenAI Model:</label>
+    <input type="text" id="model" name="model" value="gpt-4o" />
+
+    <label for="prompt">Improvement Prompt:</label>
+    <textarea id="prompt" name="prompt" rows="5">
+Please revise the following text to correct grammar, enhance clarity, and convey a professional and polite tone.
+    </textarea>
+
+    <label for="hotkey">Global Hotkey:</label>
+    <input type="text" id="hotkey" name="hotkey" value="CommandOrControl+Shift+G" />
+
+    <button type="submit">Save Settings</button>
+</form>
+
+<script>
+    const { ipcRenderer } = require('electron');
+    const fs = require('fs');
+    const path = require('path');
+
+    const configPath = path.join(__dirname, 'config.json');
+
+    window.onload = () => {
+        const modelInput = document.getElementById('model');
+        const promptInput = document.getElementById('prompt');
+        const hotkeyInput = document.getElementById('hotkey');
+
+        // Load existing config
+        if (fs.existsSync(configPath)) {
+            const config = JSON.parse(fs.readFileSync(configPath));
+            modelInput.value = config.model || 'gpt-4o';
+            promptInput.value = config.prompt || '';
+            hotkeyInput.value = config.hotkey || 'CommandOrControl+Shift+G';
+        }
+
+        // Submit settings
+        document.getElementById('settingsForm').onsubmit = (e) => {
+            e.preventDefault();
+            ipcRenderer.send('update-settings', {
+                model: modelInput.value.trim(),
+                prompt: promptInput.value.trim(),
+                hotkey: hotkeyInput.value.trim(),
+            });
+            window.close();
+        };
+    };
+</script>
+</body>
+</html>
